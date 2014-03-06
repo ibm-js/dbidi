@@ -1,8 +1,9 @@
 define([
-	"dcl/dcl"
-], function (dcl) {
+	"dcl/dcl",
+	"delite/Stateful"
+], function (dcl, Stateful) {
 
-	var BidiEngine = dcl(null, {
+	var TextLayoutEngine = dcl(Stateful, {
 		// summary:
 		//		This class provides a bidi transformation engine, i.e.
 		//		functions for reordering and shaping bidi text.
@@ -40,11 +41,13 @@ define([
 		//		7. No support for code pages. 
 		//			(currently only UTF-8 is supported. Ideally we should convert from any code page to UTF-8).
 		//			
-
-		// bdx: Object
-		//		Used for intermediate data storage
-		bdx: {},
 		
+		// Input Bidi layout in which inputText is passed to the function.
+		inputFormat: "ILYNN",
+		
+		// Output Bidi layout to which inputText should be transformed.
+		outputFormat: "VLNNN",
+
 		bidiTransform: function (/*String*/text, /*String*/formatIn, /*String*/formatOut) {
 			// summary:
 			//		Central public API for Bidi engine. Transforms the text according to formatIn, formatOut 
@@ -138,11 +141,12 @@ define([
 
 			if (!text) {
 				return "";
-			} else if (!this.checkParameters(formatIn, formatOut)) {
+			}
+			if (!this.checkParameters(formatIn, formatOut)) {
 				return text;
 			}
 	
-			this.bdx = BDX;
+			var bdx = BDX;
 			var orientIn = getOrientation(formatIn.charAt(1)),
 				orientOut = getOrientation(formatOut.charAt(1)),
 				osIn = (formatIn.charAt(0) === "I") ? "L" : formatIn.charAt(0),
@@ -151,11 +155,11 @@ define([
 				outFormat = osOut + orientOut,
 				swap = formatIn.charAt(2) + formatOut.charAt(2);
 	
-			this.bdx.defInFormat = inFormat;
-			this.bdx.defOutFormat = outFormat;
-			this.bdx.defSwap = swap;
+			bdx.defInFormat = inFormat;
+			bdx.defOutFormat = outFormat;
+			bdx.defSwap = swap;
 			
-			var stage1Text = doBidiReorder(text, inFormat, outFormat, swap, this.bdx),
+			var stage1Text = doBidiReorder(text, inFormat, outFormat, swap, bdx),
 				isRtl = false;
 	
 			if (formatOut.charAt(1) === "R") {
@@ -171,6 +175,20 @@ define([
 			} else {  //formatOut.charAt(3) === "N"
 				return deshape(stage1Text, isRtl, true);
 			}
+		},
+
+		_setInputFormatAttr: function (format) {
+			if (!validFormat.test(format)) {
+				throw new Error("dbidi/string/TextLayoutEngine: the bidi layout string is wrong!");
+			}
+			this._set("inputFormat", format);
+		},
+
+		_setOutputFormatAttr: function (format) {
+			if (!validFormat.test(format)) {
+				throw new Error("dbidi/string/TextLayoutEngine: the bidi layout string is wrong!");
+			}
+			this._set("outputFormat", format);
 		},
 
 		checkParameters: function (/*String*/formatIn, /*String*/formatOut) {
@@ -194,13 +212,17 @@ define([
 			// tags:
 			//		private
 			
-			var validFormat = /^[(I|V)][(L|R|C|D)][(Y|N)][(S|N)][N]$/;
-			
-			if (!formatIn && !formatOut) {
-				return false;
-			} else if (!validFormat.test(formatIn) || !validFormat.test(formatOut)) {
-				throw new Error("dbidi.string.BidiEngine: the bidi layout string is wrong!");
-			} else if (formatIn === formatOut) {
+			if (!formatIn) {
+				formatIn = this.inputFormat;
+			} else {
+				this._setInputFormatAttr(formatIn);
+			}
+			if (!formatOut) {
+				formatOut = this.outputFormat;
+			} else {
+				this._setOutputFormatAttr(formatOut);
+			}
+			if (formatIn === formatOut) {
 				return false;
 			}
 			return true;
@@ -1092,7 +1114,9 @@ define([
 	var LTR = 0;
 	
 	var RTL = 1;
-	
+
+	var validFormat = /^[(I|V)][(L|R|C|D)][(Y|N)][(S|N)][N]$/;
+
 	/****************************************************************************/
 	/* Array in which directional characters are replaced by their symmetric.	*/
 	/****************************************************************************/
@@ -1105,7 +1129,7 @@ define([
 		[ "\u005D", "\u005B" ],
 		[ "\u007B", "\u007D" ],	/* Curly brackets					*/
 		[ "\u007D", "\u007B" ],
-		[ "\u00AB", "\u00BB" ],	/* Double angle quotation marks	*/
+		[ "\u00AB", "\u00BB" ],	/* Double angle quotation marks		*/
 		[ "\u00BB", "\u00AB" ],
 		[ "\u2039", "\u203A" ],	/* single angle quotation mark		*/
 		[ "\u203A", "\u2039" ],
@@ -1117,13 +1141,13 @@ define([
 		[ "\u2265", "\u2264" ],
 		[ "\u2329", "\u232A" ],	/* Angle brackets					*/
 		[ "\u232A", "\u2329" ],
-		[ "\uFE59", "\uFE5A" ],	/* Small round brackets			*/
+		[ "\uFE59", "\uFE5A" ],	/* Small round brackets				*/
 		[ "\uFE5A", "\uFE59" ],
-		[ "\uFE5B", "\uFE5C" ],	/* Small curly brackets			*/
+		[ "\uFE5B", "\uFE5C" ],	/* Small curly brackets				*/
 		[ "\uFE5C", "\uFE5B" ],
 		[ "\uFE5D", "\uFE5E" ],	/* Small tortoise shell brackets	*/
 		[ "\uFE5E", "\uFE5D" ],
-		[ "\uFE64", "\uFE65" ],	/* Small less than/greater than	*/
+		[ "\uFE64", "\uFE65" ],	/* Small less than/greater than		*/
 		[ "\uFE65", "\uFE64" ]
 	];
 	var AlefTable = ["\u0622", "\u0623", "\u0625", "\u0627"];
@@ -1468,5 +1492,5 @@ define([
 		]
 	];
 
-	return BidiEngine;
+	return TextLayoutEngine;
 });

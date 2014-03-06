@@ -1,11 +1,11 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"../string/BidiEngine"
-], function (registerSuite, assert, BidiEngine) {
-	var engine = new BidiEngine();
+	"../string/TextLayoutEngine"
+], function (registerSuite, assert, TextLayoutEngine) {
+	var engine = new TextLayoutEngine();
 	var TEXT = "1111";
-	var errorMessage = "dbidi.string.BidiEngine: the bidi layout string is wrong!";
+	var errorMessage = "dbidi/string/TextLayoutEngine: the bidi layout string is wrong!";
 	var noErrorMessage = "Didn't threw error!!!";
 	var chars = "ABCDEFGIJKLMNOPQRSTUVWXYZ";
 	var c, compMessage, i, uVar;
@@ -15,37 +15,15 @@ define([
 			assert.equal("", engine.bidiTransform(uVar, "ILYNN", "VLNNN"), "Text is undefined");
 			assert.equal("", engine.bidiTransform("", "ILYNN", "VLNNN"), "Text is empty");
 		},
-		"(2) missing both layout strings" : function () {
-			assert.equal(TEXT, engine.bidiTransform(TEXT), "Both layout strings are undefined");
-			assert.equal(TEXT, engine.bidiTransform(TEXT, "", ""), "Both layout strings are empty");
-		},
-		"(3) missing one layout string" : function () {
+		"(2) undefined layout strings" : function () {
 			try {
-				assert.equal(TEXT, engine.bidiTransform(TEXT, uVar, "VLNNN"));
+				engine.inputFormat = engine.outputFormat = uVar;
 				throw new Error(noErrorMessage);
 			} catch (e) {
-				assert.equal(errorMessage, e.message, "Input layout string is undefined.");
-			}
-			try {
-				assert.equal(TEXT, engine.bidiTransform(TEXT, "", "VLNNN"));
-				throw new Error(noErrorMessage);
-			} catch (e) {
-				assert.equal(errorMessage, e.message, "Input layout is empty.");
-			}
-			try {
-				assert.equal(TEXT, engine.bidiTransform(TEXT, "ILYNN", uVar));
-				throw new Error(noErrorMessage);
-			} catch (e) {
-				assert.equal(errorMessage, e.message, "Output layout string is undefined.");
-			}
-			try {
-				assert.equal(TEXT, engine.bidiTransform(TEXT, "ILYNN", ""));
-				throw new Error(noErrorMessage);
-			} catch (e) {
-				assert.equal(errorMessage, e.message, "Output layout is empty.");
+				assert.equal(errorMessage, e.message, "Layout strings are undefined.");
 			}
 		},
-		"(4) ordering scheme in the layout strings" : function () {
+		"(3) ordering scheme in the layout strings" : function () {
 			for (i = 0; i < chars.length; i++) {
 				c = chars.charAt(i);
 				if (c === "V" || c === "I") {
@@ -67,7 +45,7 @@ define([
 				}
 			}
 		},
-		"(5) text direction in the layout strings" : function () {
+		"(4) text direction in the layout strings" : function () {
 			for (i = 0; i < chars.length; i++) {
 				c = chars.charAt(i);
 				if (c === "L" || c === "R" || c === "C" || c === "D") {
@@ -89,7 +67,7 @@ define([
 				}
 			}
 		},
-		"(6) sym.swapping in the layout strings" : function () {
+		"(5) sym.swapping in the layout strings" : function () {
 			for (i = 0; i < chars.length; i++) {
 				c = chars.charAt(i);
 				if (c === "Y" || c === "N") {
@@ -111,7 +89,7 @@ define([
 				}
 			}
 		},
-		"(7) shaping in the layout strings" : function () {
+		"(6) shaping in the layout strings" : function () {
 			for (i = 0; i < chars.length; i++) {
 				c = chars.charAt(i);
 				if (c === "S" || c === "N") {
@@ -133,7 +111,7 @@ define([
 				}
 			}
 		},
-		"(8) num.shaping in the layout string" : function () {
+		"(7) num.shaping in the layout string" : function () {
 			for (i = 0; i < chars.length; i++) {
 				c = chars.charAt(i);
 				if (c === "N") {

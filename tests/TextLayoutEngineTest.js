@@ -1,11 +1,11 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"../string/BidiEngine"
-], function (registerSuite, assert, BidiEngine) {
-	var engine = new BidiEngine();
+	"../string/TextLayoutEngine"
+], function (registerSuite, assert, TextLayoutEngine) {
+	var engine = new TextLayoutEngine();
 	registerSuite({
-		name: "Test Bidi Engine functionality",
+		name: "Test Text Layout Engine functionality",
 		"(1) implicit ltr swap -> visual ltr noSwap" : function () {
 			unilisrc.forEach(function (str, ind) {
 				assert.equal(uniliout[ind], engine.bidiTransform(str, "ILYNN", "VLNNN"),
