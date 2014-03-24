@@ -1,0 +1,17 @@
+{
+	"name": "dbidi",
+	"version": "0.1.0-dev",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/ibm-js/dbidi.git"
+	},
+	"licenses": [
+		{
+			"type": "BSD",
+			"url": "https://github.com/ibm-js/dbidi/blob/master/LICENSE"
+		}
+	],
+	"devDependencies": {
+		"intern": "1.4"
+	}
+}
