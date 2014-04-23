@@ -1,11 +1,11 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"../string/TextLayoutEngine"
+	"../TextLayoutEngine"
 ], function (registerSuite, assert, TextLayoutEngine) {
 	var engine = new TextLayoutEngine();
 	var TEXT = "1111";
-	var errorMessage = "dbidi/string/TextLayoutEngine: the bidi layout string is wrong!";
+	var errorMessage = "dbidi/TextLayoutEngine: the bidi layout string is wrong!";
 	var noErrorMessage = "Didn't threw error!!!";
 	var chars = "ABCDEFGIJKLMNOPQRSTUVWXYZ";
 	var c, compMessage, i, uVar;
