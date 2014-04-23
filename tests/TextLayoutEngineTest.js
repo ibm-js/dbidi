@@ -1,7 +1,7 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"../string/TextLayoutEngine"
+	"../TextLayoutEngine"
 ], function (registerSuite, assert, TextLayoutEngine) {
 	var engine = new TextLayoutEngine();
 	registerSuite({
