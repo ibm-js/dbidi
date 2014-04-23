@@ -179,14 +179,14 @@ define([
 
 		_setInputFormatAttr: function (format) {
 			if (!validFormat.test(format)) {
-				throw new Error("dbidi/string/TextLayoutEngine: the bidi layout string is wrong!");
+				throw new Error("dbidi/TextLayoutEngine: the bidi layout string is wrong!");
 			}
 			this._set("inputFormat", format);
 		},
 
 		_setOutputFormatAttr: function (format) {
 			if (!validFormat.test(format)) {
-				throw new Error("dbidi/string/TextLayoutEngine: the bidi layout string is wrong!");
+				throw new Error("dbidi/TextLayoutEngine: the bidi layout string is wrong!");
 			}
 			this._set("outputFormat", format);
 		},
