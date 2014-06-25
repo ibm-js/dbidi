@@ -78,7 +78,7 @@ require(["dbidi/TextLayoutEngine"], function (TextLayoutEngine) {
   var engine = new TextLayoutEngine();
   // transform the text with the given parameters
   String result1 = engine.bidiTransform("SOURCE TEXT","ILYNN","VLNNN");
-  // transform the text with the parameters, hold by object
+  // transform the text with the parameters, stored by object
   String result2 = engine.bidiTransform("SOURCE TEXT");
 });
 ```
