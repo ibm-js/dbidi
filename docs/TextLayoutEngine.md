@@ -12,10 +12,10 @@ Object holds these parameters as a properties, which allow to reuse them in mult
 
 ##### Table of Contents
 [Instantiation](#instantiation)  
-[Parameters](#parameters)
-[Launching](#launching)
-[Utilities](#utilities)
-[Limitations](#limitations)  
+[Parameters](#parameters)  
+[Launching](#launching)  
+[Utilities](#utilities)  
+[Limitations](#limitations)    
 
 <a name="instantiation"></a>
 ## Instantiation
@@ -63,7 +63,7 @@ You can set or update values of parameters by one of the following ways:
 require(["dbidi/TextLayoutEngine"], function (TextLayoutEngine) {
   var engine = new Engine();
   engine.inputFornat = "ILYNN";
-  engine.outputFormat = ""VLNNN";
+  engine.outputFormat = "VLNNN";
 });
 ```
 
