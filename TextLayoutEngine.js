@@ -26,14 +26,14 @@ define([
 		//		As of February 2011, Bidi engine has following limitations:
 		//
 		//		1. No support for following numeric shaping options:
-		//		    - H - Hindi,
-		//		    - C - Contextual, 
-		//		    - N - Nominal.
+		//			- H - Hindi,
+		//			- C - Contextual, 
+		//			- N - Nominal.
 		//		2. No support for following shaping options:
-		//		    - I - Initial shaping,
-		//		    - M - Middle shaping,
-		//		    - F - Final shaping,
-		//		    - B - Isolated shaping.
+		//			- I - Initial shaping,
+		//			- M - Middle shaping,
+		//			- F - Final shaping,
+		//			- B - Isolated shaping.
 		//		3. No support for source-to-target or/and target-to-source maps.
 		//		4. No support for LRE/RLE/LRO/RLO/PDF (they are handled like neutrals).
 		//		5. No support for Windows compatibility.
@@ -201,11 +201,11 @@ define([
 			// description:
 			//		Checks, that layout parameters are different and contain allowed values.
 			//		Allowed values for format string are:
-			// 			- 1st letter: I, V
-			// 			- 2nd letter: L, R, C, D
-			// 			- 3rd letter: Y, N
-			// 			- 4th letter: S, N
-			// 			- 5th letter: N
+			//			- 1st letter: I, V
+			//			- 2nd letter: L, R, C, D
+			//			- 3rd letter: Y, N
+			//			- 4th letter: S, N
+			//			- 5th letter: N
 			// returns: /*Boolean*/
 			//		true - if layout parameters are valid.
 			//		false - otherwise. 
@@ -319,7 +319,9 @@ define([
 		if (params.inFormat === params.outFormat) {
 			return text;
 		}
-		inFormat = params.inFormat, outFormat = params.outFormat, swap = params.swap;
+		inFormat = params.inFormat;
+		outFormat = params.outFormat;
+		swap = params.swap;
 		var inOrdering = inFormat.substring(0, 1),
 		inOrientation = inFormat.substring(1, 4),
 		outOrdering = outFormat.substring(0, 1),
@@ -364,7 +366,7 @@ define([
 			//cases: VLTR->LRTL, VRTL->LLTR
 			text = invertStr(text);
 			return (inOrientation === "RTL") ? doBidiReorder(text, "LLTR", "VLTR", swap, bdx) :
-											   doBidiReorder(text, "LRTL", "VRTL", swap, bdx);
+												doBidiReorder(text, "LRTL", "VRTL", swap, bdx);
 		}
 		if ((inFormat === "VRTL") && (outFormat === "LRTL")) {
 			//case VRTL->LRTL
@@ -724,7 +726,7 @@ define([
 			classes = [];
 		bdx.hiLevel = bdx.dir;
 		bdx.lastArabic = false;
-		bdx.hasUbatAl = false,
+		bdx.hasUbatAl = false;
 		bdx.hasUbatB = false;
 		bdx.hasUbatS = false;
 		for (i = 0; i < len; i++) {
@@ -987,7 +989,7 @@ define([
 												}
 											}
 										}
-										if (ix < 1 || (wType = types[ix - 1]) === UBAT_B) {
+										if (ix < 1 || types[ix - 1] === UBAT_B) {
 											return UBAT_ON;
 										}
 										return classes[ix - 1];
@@ -1159,71 +1161,71 @@ define([
 	 * Arabic Characters in the base form
 	 */
 	var BaseForm = ["\u0627", "\u0628", "\u062A", "\u062B", "\u062C", "\u062D", "\u062E", "\u062F", "\u0630", "\u0631",
-	                "\u0632", "\u0633", "\u0634", "\u0635", "\u0636", "\u0637", "\u0638", "\u0639", "\u063A", "\u0641",
-	                "\u0642", "\u0643", "\u0644", "\u0645", "\u0646", "\u0647", "\u0648", "\u064A", "\u0625", "\u0623",
-	                "\u0622", "\u0629", "\u0649", "\u0644", "\u0645", "\u0646", "\u0647", "\u0648", "\u064A", "\u0625",
-	                "\u0623", "\u0622", "\u0629", "\u0649", "\u06CC", "\u0626", "\u0624", "\u064B", "\u064C", "\u064D",
-	                "\u064E", "\u064F", "\u0650", "\u0651", "\u0652", "\u0621"];
+                    "\u0632", "\u0633", "\u0634", "\u0635", "\u0636", "\u0637", "\u0638", "\u0639", "\u063A", "\u0641",
+                    "\u0642", "\u0643", "\u0644", "\u0645", "\u0646", "\u0647", "\u0648", "\u064A", "\u0625", "\u0623",
+                    "\u0622", "\u0629", "\u0649", "\u0644", "\u0645", "\u0646", "\u0647", "\u0648", "\u064A", "\u0625",
+                    "\u0623", "\u0622", "\u0629", "\u0649", "\u06CC", "\u0626", "\u0624", "\u064B", "\u064C", "\u064D",
+                    "\u064E", "\u064F", "\u0650", "\u0651", "\u0652", "\u0621"];
 	
 	/**
 	 * Arabic shaped characters in Isolated form
 	 */
 	var IsolatedForm = ["\uFE8D", "\uFE8F", "\uFE95", "\uFE99", "\uFE9D", "\uFEA1", "\uFEA5", "\uFEA9", "\uFEAB",
-	                    "\uFEAD", "\uFEAF", "\uFEB1", "\uFEB5", "\uFEB9", "\uFEBD", "\uFEC1", "\uFEC5", "\uFEC9",
-	                    "\uFECD", "\uFED1", "\uFED5", "\uFED9", "\uFEDD", "\uFEE1", "\uFEE5", "\uFEE9", "\uFEED",
-	                    "\uFEF1", "\uFE87", "\uFE83", "\uFE81", "\uFE93", "\uFEEF", "\uFBFC", "\uFE89", "\uFE85",
-	                    "\uFE70", "\uFE72", "\uFE74", "\uFE76", "\uFE78", "\uFE7A", "\uFE7C", "\uFE7E", "\uFE80"];
+                        "\uFEAD", "\uFEAF", "\uFEB1", "\uFEB5", "\uFEB9", "\uFEBD", "\uFEC1", "\uFEC5", "\uFEC9",
+                        "\uFECD", "\uFED1", "\uFED5", "\uFED9", "\uFEDD", "\uFEE1", "\uFEE5", "\uFEE9", "\uFEED",
+                        "\uFEF1", "\uFE87", "\uFE83", "\uFE81", "\uFE93", "\uFEEF", "\uFBFC", "\uFE89", "\uFE85",
+                        "\uFE70", "\uFE72", "\uFE74", "\uFE76", "\uFE78", "\uFE7A", "\uFE7C", "\uFE7E", "\uFE80"];
 	
 	/**
 	 * Arabic shaped characters in Final form
 	 */
 	var FinalForm = ["\uFE8E", "\uFE90", "\uFE96", "\uFE9A", "\uFE9E", "\uFEA2", "\uFEA6", "\uFEAA", "\uFEAC", "\uFEAE",
-	                 "\uFEB0", "\uFEB2", "\uFEB6", "\uFEBA", "\uFEBE", "\uFEC2", "\uFEC6", "\uFECA", "\uFECE", "\uFED2",
-	                 "\uFED6", "\uFEDA", "\uFEDE", "\uFEE2", "\uFEE6", "\uFEEA", "\uFEEE", "\uFEF2", "\uFE88", "\uFE84",
-	                 "\uFE82", "\uFE94", "\uFEF0", "\uFBFD", "\uFE8A", "\uFE86", "\uFE70", "\uFE72", "\uFE74", "\uFE76",
-	                 "\uFE78", "\uFE7A", "\uFE7C", "\uFE7E", "\uFE80"];
+                     "\uFEB0", "\uFEB2", "\uFEB6", "\uFEBA", "\uFEBE", "\uFEC2", "\uFEC6", "\uFECA", "\uFECE", "\uFED2",
+                     "\uFED6", "\uFEDA", "\uFEDE", "\uFEE2", "\uFEE6", "\uFEEA", "\uFEEE", "\uFEF2", "\uFE88", "\uFE84",
+                     "\uFE82", "\uFE94", "\uFEF0", "\uFBFD", "\uFE8A", "\uFE86", "\uFE70", "\uFE72", "\uFE74", "\uFE76",
+                     "\uFE78", "\uFE7A", "\uFE7C", "\uFE7E", "\uFE80"];
 	
 	/**
 	 * Arabic shaped characters in Media form
 	 */
 	var MedialForm = ["\uFE8E", "\uFE92", "\uFE98", "\uFE9C", "\uFEA0", "\uFEA4", "\uFEA8", "\uFEAA", "\uFEAC",
-	                  "\uFEAE", "\uFEB0", "\uFEB4", "\uFEB8", "\uFEBC", "\uFEC0", "\uFEC4", "\uFEC8", "\uFECC",
-	                  "\uFED0", "\uFED4", "\uFED8", "\uFEDC", "\uFEE0", "\uFEE4", "\uFEE8", "\uFEEC", "\uFEEE",
-	                  "\uFEF4", "\uFE88", "\uFE84", "\uFE82", "\uFE94", "\uFEF0", "\uFBFF", "\uFE8C", "\uFE86",
-	                  "\uFE71", "\uFE72", "\uFE74", "\uFE77", "\uFE79", "\uFE7B", "\uFE7D", "\uFE7F", "\uFE80"];
+                      "\uFEAE", "\uFEB0", "\uFEB4", "\uFEB8", "\uFEBC", "\uFEC0", "\uFEC4", "\uFEC8", "\uFECC",
+                      "\uFED0", "\uFED4", "\uFED8", "\uFEDC", "\uFEE0", "\uFEE4", "\uFEE8", "\uFEEC", "\uFEEE",
+                      "\uFEF4", "\uFE88", "\uFE84", "\uFE82", "\uFE94", "\uFEF0", "\uFBFF", "\uFE8C", "\uFE86",
+                      "\uFE71", "\uFE72", "\uFE74", "\uFE77", "\uFE79", "\uFE7B", "\uFE7D", "\uFE7F", "\uFE80"];
 	
 	/**
 	 * Arabic shaped characters in Initial form
 	 */
 	var InitialForm = ["\uFE8D", "\uFE91", "\uFE97", "\uFE9B", "\uFE9F", "\uFEA3", "\uFEA7", "\uFEA9", "\uFEAB",
-	                   "\uFEAD", "\uFEAF", "\uFEB3", "\uFEB7", "\uFEBB", "\uFEBF", "\uFEC3", "\uFEC7", "\uFECB",
-	                   "\uFECF", "\uFED3", "\uFED7", "\uFEDB", "\uFEDF", "\uFEE3", "\uFEE7", "\uFEEB", "\uFEED",
-	                   "\uFEF3", "\uFE87", "\uFE83", "\uFE81", "\uFE93", "\uFEEF", "\uFBFE", "\uFE8B", "\uFE85",
-	                   "\uFE70", "\uFE72", "\uFE74", "\uFE76", "\uFE78", "\uFE7A", "\uFE7C", "\uFE7E", "\uFE80"];
+                       "\uFEAD", "\uFEAF", "\uFEB3", "\uFEB7", "\uFEBB", "\uFEBF", "\uFEC3", "\uFEC7", "\uFECB",
+                       "\uFECF", "\uFED3", "\uFED7", "\uFEDB", "\uFEDF", "\uFEE3", "\uFEE7", "\uFEEB", "\uFEED",
+                       "\uFEF3", "\uFE87", "\uFE83", "\uFE81", "\uFE93", "\uFEEF", "\uFBFE", "\uFE8B", "\uFE85",
+                       "\uFE70", "\uFE72", "\uFE74", "\uFE76", "\uFE78", "\uFE7A", "\uFE7C", "\uFE7E", "\uFE80"];
 	
 	/**
 	 * Arabic characters that couldn't join to the next character
 	 */
 	var StandAlonForm = ["\u0621", "\u0627", "\u062F", "\u0630", "\u0631", "\u0632", "\u0648", "\u0622", "\u0629",
-	                     "\u0626", "\u0624", "\u0625", "\u0675", "\u0623"];
+                         "\u0626", "\u0624", "\u0625", "\u0675", "\u0623"];
 	
 	var FETo06Table = ["\u064B", "\u064B", "\u064C", "\u061F", "\u064D", "\u061F", "\u064E", "\u064E", "\u064F",
-	                   "\u064F", "\u0650", "\u0650", "\u0651", "\u0651", "\u0652", "\u0652", "\u0621", "\u0622",
-	                   "\u0622", "\u0623", "\u0623", "\u0624", "\u0624", "\u0625", "\u0625", "\u0626", "\u0626",
-	                   "\u0626", "\u0626", "\u0627", "\u0627", "\u0628", "\u0628", "\u0628", "\u0628", "\u0629",
-	                   "\u0629", "\u062A", "\u062A", "\u062A", "\u062A", "\u062B", "\u062B", "\u062B", "\u062B",
-	                   "\u062C", "\u062C", "\u062C", "\u062c", "\u062D", "\u062D", "\u062D", "\u062D", "\u062E",
-	                   "\u062E", "\u062E", "\u062E", "\u062F", "\u062F", "\u0630", "\u0630", "\u0631", "\u0631",
-	                   "\u0632", "\u0632", "\u0633", "\u0633", "\u0633", "\u0633", "\u0634", "\u0634", "\u0634",
-	                   "\u0634", "\u0635", "\u0635", "\u0635", "\u0635", "\u0636", "\u0636", "\u0636", "\u0636",
-	                   "\u0637", "\u0637", "\u0637", "\u0637", "\u0638", "\u0638", "\u0638", "\u0638", "\u0639",
-	                   "\u0639", "\u0639", "\u0639", "\u063A", "\u063A", "\u063A", "\u063A", "\u0641", "\u0641",
-	                   "\u0641", "\u0641", "\u0642", "\u0642", "\u0642", "\u0642", "\u0643", "\u0643", "\u0643",
-	                   "\u0643", "\u0644", "\u0644", "\u0644", "\u0644", "\u0645", "\u0645", "\u0645", "\u0645",
-	                   "\u0646", "\u0646", "\u0646", "\u0646", "\u0647", "\u0647", "\u0647", "\u0647", "\u0648",
-	                   "\u0648", "\u0649", "\u0649", "\u064A", "\u064A", "\u064A", "\u064A", "\uFEF5", "\uFEF6",
-	                   "\uFEF7", "\uFEF8", "\uFEF9", "\uFEFA", "\uFEFB", "\uFEFC", "\u061F", "\u061F", "\u061F"];
-	
+                       "\u064F", "\u0650", "\u0650", "\u0651", "\u0651", "\u0652", "\u0652", "\u0621", "\u0622",
+                       "\u0622", "\u0623", "\u0623", "\u0624", "\u0624", "\u0625", "\u0625", "\u0626", "\u0626",
+                       "\u0626", "\u0626", "\u0627", "\u0627", "\u0628", "\u0628", "\u0628", "\u0628", "\u0629",
+                       "\u0629", "\u062A", "\u062A", "\u062A", "\u062A", "\u062B", "\u062B", "\u062B", "\u062B",
+                       "\u062C", "\u062C", "\u062C", "\u062c", "\u062D", "\u062D", "\u062D", "\u062D", "\u062E",
+                       "\u062E", "\u062E", "\u062E", "\u062F", "\u062F", "\u0630", "\u0630", "\u0631", "\u0631",
+                       "\u0632", "\u0632", "\u0633", "\u0633", "\u0633", "\u0633", "\u0634", "\u0634", "\u0634",
+                       "\u0634", "\u0635", "\u0635", "\u0635", "\u0635", "\u0636", "\u0636", "\u0636", "\u0636",
+                       "\u0637", "\u0637", "\u0637", "\u0637", "\u0638", "\u0638", "\u0638", "\u0638", "\u0639",
+                       "\u0639", "\u0639", "\u0639", "\u063A", "\u063A", "\u063A", "\u063A", "\u0641", "\u0641",
+                       "\u0641", "\u0641", "\u0642", "\u0642", "\u0642", "\u0642", "\u0643", "\u0643", "\u0643",
+                       "\u0643", "\u0644", "\u0644", "\u0644", "\u0644", "\u0645", "\u0645", "\u0645", "\u0645",
+                       "\u0646", "\u0646", "\u0646", "\u0646", "\u0647", "\u0647", "\u0647", "\u0647", "\u0648",
+                       "\u0648", "\u0649", "\u0649", "\u064A", "\u064A", "\u064A", "\u064A", "\uFEF5", "\uFEF6",
+                       "\uFEF7", "\uFEF8", "\uFEF9", "\uFEFA", "\uFEFB", "\uFEFC", "\u061F", "\u061F", "\u061F"];
+
 	var ArabicAlefBetIntervalsBegine = ["\u0621", "\u0641"];
 	
 	var ArabicAlefBetIntervalsEnd = ["\u063A", "\u064a"];
