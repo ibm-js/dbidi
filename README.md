@@ -1,4 +1,4 @@
-#dbidi
+#dbidi [![Build Status](https://travis-ci.org/ibm-js/dbidi.png?branch=master)](https://travis-ci.org/ibm-js/dbidi)
 
 This project provides bidi utilities for JavaScript/AMD/Dojo Applications
 
