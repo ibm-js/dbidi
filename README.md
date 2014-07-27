@@ -19,7 +19,7 @@ All contributions require a [Dojo Foundation CLA](http://dojofoundation.org/abou
 
 This project requires the following other projects to run:
  * dcl
- * delite
+ * decor
  
 ## Installation
 

@@ -1,6 +1,6 @@
 define([
 	"dcl/dcl",
-	"delite/Stateful"
+	"decor/Stateful"
 ], function (dcl, Stateful) {
 
 	var TextLayoutEngine = dcl(Stateful, {
