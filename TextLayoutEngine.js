@@ -697,7 +697,7 @@ define([
 					if (rtl) {
 						//Lam + Alef
 						if (i > 0 && consumeNextSpace && strFE[i-1] === " ") {
-							outBuf.substring(outBuf.length-1) = "\u0644";
+							outBuf.charAt(outBuf.length-1) = "\u0644";
 						} else {
 							outBuf += "\u0644";
 							increase = true;
