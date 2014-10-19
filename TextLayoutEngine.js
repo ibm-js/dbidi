@@ -34,12 +34,10 @@ define([
 		//			- M - Middle shaping,
 		//			- F - Final shaping,
 		//			- B - Isolated shaping.
-		//		3. No support for source-to-target or/and target-to-source maps.
-		//		4. No support for LRE/RLE/LRO/RLO/PDF (they are handled like neutrals).
-		//		5. No support for Windows compatibility.
-		//		6. No support for  insert/remove marks.
-		//		7. No support for code pages. 
-		//			(currently only UTF-8 is supported. Ideally we should convert from any code page to UTF-8).
+		//		3. No support for LRE/RLE/LRO/RLO/PDF (they are handled like neutrals).
+		//		4. No support for Windows compatibility.
+		//		5. No support for  insert/remove marks.
+		//		6. No support for code pages. 
 		//			
 		
 		// Input Bidi layout in which inputText is passed to the function.
@@ -47,6 +45,10 @@ define([
 		
 		// Output Bidi layout to which inputText should be transformed.
 		outputFormat: "VLNNN",
+
+		// Arrays of indexes, which show position of each character before and after transformation
+		sourceToTarget: [],
+		targetToSource: [],
 
 		bidiTransform: function (/*String*/text, /*String*/formatIn, /*String*/formatOut) {
 			// summary:
@@ -139,9 +141,12 @@ define([
 			// tags:
 			//		public
 
+			sourceToTarget = [];
+			targetToSource = [];
 			if (!text) {
 				return "";
 			}
+			initMaps(text.length);
 			if (!this.checkParameters(formatIn, formatOut)) {
 				return text;
 			}
@@ -158,15 +163,17 @@ define([
 			bdx.defInFormat = inFormat;
 			bdx.defOutFormat = outFormat;
 			bdx.defSwap = swap;
-			
+
 			var stage1Text = doBidiReorder(text, inFormat, outFormat, swap, bdx),
 				isRtl = false;
-	
+
 			if (formatOut.charAt(1) === "R") {
 				isRtl = true;
 			} else if (formatOut.charAt(1) === "C" || formatOut.charAt(1) === "D") {
 				isRtl = this.checkContextual(stage1Text);
 			}
+			
+			targetToSource = reverseMap(sourceToTarget);
 			
 			if (formatIn.charAt(3) === formatOut.charAt(3)) {
 				return stage1Text;
@@ -278,6 +285,28 @@ define([
 				}
 			}
 			return false;
+		},
+		
+		getSourceToTargetMap: function() {
+			// summary:
+			//		Return array, containing positions of each character from the source text 
+			//		in the resulting text.
+			// returns: /* Array */
+			// tags:
+			//		public
+			
+			return sourceToTarget;
+		},
+
+		getTargetToSourceMap: function() {
+			// summary:
+			//		Return array, containing positions of each character from the resulting text 
+			//		in the source text.
+			// returns: /* Array */
+			// tags:
+			//		public
+
+			return targetToSource;
 		}
 		
 	});
@@ -494,6 +523,9 @@ define([
 		for (var idx = 0; idx < str06.length; idx++) {
 			if (!(compress && indexOf(compressArray, compressArray.length, idx) > -1)) {
 				outBuf += str06[idx];
+			} else {
+				updateMap(targetToSource, idx, !rtl, -1);
+				sourceToTarget.splice(idx ,1);
 			}
 		}
 		return outBuf;
@@ -654,38 +686,35 @@ define([
 		}
 		text = String(text);
 	
-		var outBuf = "", strFE = [], textBuff = "";
-		if (consumeNextSpace) {
-			for (var j = 0; j < text.length; j++) {
-				if (text.charAt(j) === " ") {
-					if (rtl) {
-						if (j > 0 && text.charAt(j - 1) >= "\uFEF5" && text.charAt(j - 1) <= "\uFEFC") {
-							continue;
-						}
-					} else {
-						if (j + 1 < text.length && text.charAt(j + 1) >= "\uFEF5" && text.charAt(j + 1) <= "\uFEFC") {
-							continue;
-						}
-					}
-				}
-				textBuff += text.charAt(j);
-			}
-		} else {
-			textBuff = String(text);
-		}
-		strFE = textBuff.split("");
-		for (var i = 0; i < textBuff.length; i++) {
+		var outBuf = "", strFE = [];
+		strFE = text.split("");
+		for (var i = 0; i < text.length; i++) {
+			var increase = false;
 			if (strFE[i] >= "\uFE70" && strFE[i] < "\uFEFF") {
-				var chNum = textBuff.charCodeAt(i);
+				var chNum = text.charCodeAt(i);
 				if (strFE[i] >= "\uFEF5" && strFE[i] <= "\uFEFC") {
 					//expand the LamAlef
 					if (rtl) {
 						//Lam + Alef
-						outBuf += "\u0644";
+						if (i > 0 && consumeNextSpace && strFE[i-1] === " ") {
+							outBuf.substring(outBuf.length-1) = "\u0644";
+						} else {
+							outBuf += "\u0644";
+							increase = true;
+						}
 						outBuf += AlefTable[(chNum - 65269) / 2];
 					} else {
 						outBuf += AlefTable[(chNum - 65269) / 2];
 						outBuf += "\u0644";
+						if (i+1 < text.length && consumeNextSpace && strFE[i+1] === " ") {
+							i++;
+						} else {
+							increase = true;
+						}
+					}
+					if (increase) {
+						updateMap(targetToSource, i, true, 1);
+						sourceToTarget.splice(i, 0, sourceToTarget[i]);
 					}
 				} else {
 					outBuf += FETo06Table[chNum - 65136];
@@ -838,6 +867,7 @@ define([
 		//		private					
 		var chars = str.split("");
 		chars.reverse();
+		sourceToTarget.reverse();
 		return chars.join("");
 	}
 	
@@ -893,6 +923,7 @@ define([
 		}
 		if (lev === 1 && bdx.dir === RTL && !bdx.hasUbatB) {
 			chars.reverse();
+			sourceToTarget.reverse();
 			return;
 		}
 		var len = chars.length, start = 0, end, lo, hi, tmp;
@@ -906,6 +937,9 @@ define([
 					tmp = chars[lo];
 					chars[lo] = chars[hi];
 					chars[hi] = tmp;
+					tmp = sourceToTarget[lo];
+					sourceToTarget[lo] = sourceToTarget[hi];
+					sourceToTarget[hi] = tmp;
 				}
 				start = end;
 			}
@@ -1094,6 +1128,29 @@ define([
 		return alef06;
 	}
 
+	function initMaps(length) {		
+		for (var i = 0; i < length; i++) {
+			sourceToTarget[i] = i;
+			targetToSource[i] = i;
+		}
+	}
+
+	function reverseMap(sourceMap) {
+		var map = new Array(sourceMap.length);
+		for (var i = 0; i < sourceMap.length; i++) {
+			map[sourceMap[i]] = i;
+		}
+		return map;
+	}
+
+	function updateMap(map, value, isGreater, update) {
+		for (var i = 0; i < map.length; i++) {
+			if (map[i] > value || (!isGreater && map[i] == value)) {
+				map[i] += update;
+			}
+		}
+	}
+	
 	var	BDX = {
 			dir: 0,
 			defInFormat: "LLTR",
