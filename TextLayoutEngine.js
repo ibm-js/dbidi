@@ -46,8 +46,10 @@ define([
 		// Output Bidi layout to which inputText should be transformed.
 		outputFormat: "VLNNN",
 
-		// Arrays of indexes, which show position of each character before and after transformation
+		// Array, containing positions of each character from the source text in the resulting text. 
 		sourceToTarget: [],
+		
+		// Array, containing positions of each character from the resulting text in the source text. 
 		targetToSource: [],
 
 		bidiTransform: function (/*String*/text, /*String*/formatIn, /*String*/formatOut) {
@@ -141,12 +143,12 @@ define([
 			// tags:
 			//		public
 
-			sourceToTarget = [];
-			targetToSource = [];
+			this.sourceToTarget = [];
+			this.targetToSource = [];
 			if (!text) {
 				return "";
 			}
-			initMaps(text.length);
+			initMaps(this.sourceToTarget, this.targetToSource, text.length);
 			if (!this.checkParameters(formatIn, formatOut)) {
 				return text;
 			}
@@ -173,7 +175,9 @@ define([
 				isRtl = this.checkContextual(stage1Text);
 			}
 			
-			targetToSource = reverseMap(sourceToTarget);
+			this.sourceToTarget = stMap;
+			this.targetToSource = reverseMap(this.sourceToTarget);
+			tsMap = this.targetToSource;
 			
 			if (formatIn.charAt(3) === formatOut.charAt(3)) {
 				return stage1Text;
@@ -182,6 +186,8 @@ define([
 			} else {  //formatOut.charAt(3) === "N"
 				return deshape(stage1Text, isRtl, true);
 			}
+			this.sourceToTarget = stMap;
+			this.targetToSource = tsMap;
 		},
 
 		_setInputFormatAttr: function (format) {
@@ -285,28 +291,6 @@ define([
 				}
 			}
 			return false;
-		},
-		
-		getSourceToTargetMap: function() {
-			// summary:
-			//		Return array, containing positions of each character from the source text 
-			//		in the resulting text.
-			// returns: /* Array */
-			// tags:
-			//		public
-			
-			return sourceToTarget;
-		},
-
-		getTargetToSourceMap: function() {
-			// summary:
-			//		Return array, containing positions of each character from the resulting text 
-			//		in the source text.
-			// returns: /* Array */
-			// tags:
-			//		public
-
-			return targetToSource;
 		}
 		
 	});
@@ -524,8 +508,8 @@ define([
 			if (!(compress && indexOf(compressArray, compressArray.length, idx) > -1)) {
 				outBuf += str06[idx];
 			} else {
-				updateMap(targetToSource, idx, !rtl, -1);
-				sourceToTarget.splice(idx ,1);
+				updateMap(tSMap, idx, !rtl, -1);
+				stMap.splice(idx ,1);
 			}
 		}
 		return outBuf;
@@ -713,8 +697,8 @@ define([
 						}
 					}
 					if (increase) {
-						updateMap(targetToSource, i, true, 1);
-						sourceToTarget.splice(i, 0, sourceToTarget[i]);
+						updateMap(tsMap, i, true, 1);
+						stMap.splice(i, 0, stMap[i]);
 					}
 				} else {
 					outBuf += FETo06Table[chNum - 65136];
@@ -867,7 +851,7 @@ define([
 		//		private					
 		var chars = str.split("");
 		chars.reverse();
-		sourceToTarget.reverse();
+		stMap.reverse();
 		return chars.join("");
 	}
 	
@@ -923,7 +907,7 @@ define([
 		}
 		if (lev === 1 && bdx.dir === RTL && !bdx.hasUbatB) {
 			chars.reverse();
-			sourceToTarget.reverse();
+			stMap.reverse();
 			return;
 		}
 		var len = chars.length, start = 0, end, lo, hi, tmp;
@@ -937,9 +921,9 @@ define([
 					tmp = chars[lo];
 					chars[lo] = chars[hi];
 					chars[hi] = tmp;
-					tmp = sourceToTarget[lo];
-					sourceToTarget[lo] = sourceToTarget[hi];
-					sourceToTarget[hi] = tmp;
+					tmp = stMap[lo];
+					stMap[lo] = stMap[hi];
+					stMap[hi] = tmp;
 				}
 				start = end;
 			}
@@ -1128,10 +1112,12 @@ define([
 		return alef06;
 	}
 
-	function initMaps(length) {		
-		for (var i = 0; i < length; i++) {
-			sourceToTarget[i] = i;
-			targetToSource[i] = i;
+	function initMaps(map1, map2, length) {		
+		stMap = [];
+		for (var i = 0; i < length; i++) {			
+			map1[i] = i;
+			map2[i] = i;
+			stMap[i] = i;
 		}
 	}
 
@@ -1150,7 +1136,10 @@ define([
 			}
 		}
 	}
-	
+
+	var stMap = [];
+	var tsMap = [];
+		
 	var	BDX = {
 			dir: 0,
 			defInFormat: "LLTR",
