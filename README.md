@@ -4,7 +4,7 @@ This project provides bidi utilities for JavaScript/AMD/Dojo Applications
 
 ## Status
 
-No official release yet.
+The most recent pre-release is 0.2.0.
 
 ## Migration
 

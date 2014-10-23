@@ -1,9 +1,9 @@
 {
 	"name": "dbidi",
-	"version": "0.1.1-dev",
+	"version": "0.2.0",
 	"dependencies": {
 		"dcl": "1.1.x",
-		"decor": "0.2.0-dev"
+		"decor": "0.3.x"
 	},
 	"devDependencies": {
 		"requirejs": "2.1.x"
