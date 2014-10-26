@@ -9,6 +9,8 @@ The `dbidi/TextLayoutEngine` module provides a bidi transformation engine used f
 Engine implements Unicode Bidi Algorithm as specified at [Unicode Standard Annex #9](http://www.unicode.org/reports/tr9/).
 Type of the transformation is controlled by parameters, which describe actual format of input and required format of output.
 Object holds these parameters as a properties, which allow to reuse them in multiply calls of engine.
+Additionally object holds info about relative positions of each character in the source and resulting strings.
+This info is placed into sourceToTarget and targetToSource attributes. 
 
 ##### Table of Contents
 [Instantiation](#instantiation)  
@@ -103,7 +105,6 @@ The `dbidi/TextLayoutEngine` module additionally provides few utilities to deal 
    * Middle shaping
    * Final shaping
    * Isolated shaping
-3. No support for source-to-target or/and target-to-source maps.
-4. No support for bidi marks (they are handled like neutrals).
-5. No support for Windows compatibility.
-6. No support for code pages. Currently only UTF-8 is supported.
+3. No support for bidi marks (they are handled like neutrals).
+4. No support for Windows compatibility.
+5. No support for code pages.
