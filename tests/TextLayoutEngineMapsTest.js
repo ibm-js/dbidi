@@ -16,7 +16,7 @@ define([
 				engine.targetToSource.forEach(function (val, ind) {
 					assert.equal(txt1.charAt(ind), result.charAt(val), contErr);
 				});
-		},
+			},
 		"(2) implicit ltr -> visual rtl" : function () {
 			var result = engine.bidiTransform(txt1, "ILYNN", "VRNNN");
 			assert.equal(engine.sourceToTarget.length, result.length, lengthErr);
@@ -49,7 +49,7 @@ define([
 			engine.targetToSource.forEach(function (val, ind) {
 				assert.equal(txt1.charAt(ind), result.charAt(val), contErr);
 			});
-		},		
+		},
 	});
 
 	var txt1 = "\u05d0\u05d1\u05d2 123 ABC 456.";

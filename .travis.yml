@@ -1,4 +1,18 @@
+env:
+  global:
+    - secure: "FZs4G8KCBzSFkLbX8+Q/kY991lZMIownBGDa3NIK5AmfuO8HBnlJUzLcQcwyuMhaY1+LGxtxpQXOg8EGZHr7QDqLcOKUAE3rHxFPMnfD8bvGKTEu+/MQlZp5A8LlQTOCkCfrZjiPx41sEjdx1ZYHuyTdth0tS+R6X/45Azk7g9I="
+    - secure: "UVUPC+hTPWfUl3cleK3BR2AF+dDT/oFHcW9UYP1i01VINHG017DIEwz9PXqeDDnL1/4ZbxERIUtvFzWnmAty5W9JvOL73mdUml8nOWEPTsa31FHFqCjKc1DihYbBJyCTGy+BP6tZ0hCjHZxIk4SIp4YD7idYbSBsH/KXzDf5BLY="
 language: node_js
 node_js: "0.10"
-install: "npm -g install jshint@2.4.x"
-script: "jshint --exclude tests ."
+install:
+  - npm -g install bower
+  - npm -g install grunt-cli
+  - npm install
+  - yes | bower install
+  - cd node_modules/intern
+  - npm install
+  - cd ../..
+script:
+  - grunt jshint
+  - grunt intern:node
+  - if [[ "$TRAVIS_SECURE_ENV_VARS" == "true" ]]; then grunt intern:remote; fi
