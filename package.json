@@ -1,17 +1,21 @@
 {
-	"name": "dbidi",
-	"version": "0.2.0",
-	"repository": {
-		"type": "git",
-		"url": "http://github.com/ibm-js/dbidi.git"
-	},
-	"licenses": [
-		{
-			"type": "BSD",
-			"url": "https://github.com/ibm-js/dbidi/blob/master/LICENSE"
-		}
-	],
-	"devDependencies": {
-		"intern": "1.4"
-	}
+  "name": "dbidi",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ibm-js/dbidi.git"
+  },
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/ibm-js/dbidi/blob/master/LICENSE"
+    }
+  ],
+  "devDependencies": {
+		"jshint": "~2.5.1",
+		"intern": "~1.7",
+		"grunt": "~0.4.2",
+		"grunt-contrib-jshint": "~0.6.3",
+		"jsdoc-amddcl": "git://github.com/ibm-js/jsdoc-amddcl#master"
+  }
 }

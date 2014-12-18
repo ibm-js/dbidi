@@ -255,7 +255,10 @@ define([
 			//		public		
 			var dir = firstStrongDir(text);
 			if (dir !== "ltr" && dir !== "rtl") {
-				dir = document.dir.toLowerCase();
+				try {
+					dir = document.dir.toLowerCase();
+				} catch (e) {
+				}
 				if (dir !== "ltr" && dir !== "rtl") {
 					dir = "ltr";
 				}
@@ -508,8 +511,8 @@ define([
 			if (!(compress && indexOf(compressArray, compressArray.length, idx) > -1)) {
 				outBuf += str06[idx];
 			} else {
-				updateMap(tSMap, idx, !rtl, -1);
-				stMap.splice(idx ,1);
+				updateMap(tsMap, idx, !rtl, -1);
+				stMap.splice(idx, 1);
 			}
 		}
 		return outBuf;
@@ -680,8 +683,8 @@ define([
 					//expand the LamAlef
 					if (rtl) {
 						//Lam + Alef
-						if (i > 0 && consumeNextSpace && strFE[i-1] === " ") {
-							outBuf = outBuf.substring(0, outBuf.length-1) + "\u0644";
+						if (i > 0 && consumeNextSpace && strFE[i - 1] === " ") {
+							outBuf = outBuf.substring(0, outBuf.length - 1) + "\u0644";
 						} else {
 							outBuf += "\u0644";
 							increase = true;
@@ -690,7 +693,7 @@ define([
 					} else {
 						outBuf += AlefTable[(chNum - 65269) / 2];
 						outBuf += "\u0644";
-						if (i+1 < text.length && consumeNextSpace && strFE[i+1] === " ") {
+						if (i + 1 < text.length && consumeNextSpace && strFE[i + 1] === " ") {
 							i++;
 						} else {
 							increase = true;
@@ -1112,9 +1115,9 @@ define([
 		return alef06;
 	}
 
-	function initMaps(map1, map2, length) {		
+	function initMaps(map1, map2, length) {
 		stMap = [];
-		for (var i = 0; i < length; i++) {			
+		for (var i = 0; i < length; i++) {
 			map1[i] = i;
 			map2[i] = i;
 			stMap[i] = i;
@@ -1131,7 +1134,7 @@ define([
 
 	function updateMap(map, value, isGreater, update) {
 		for (var i = 0; i < map.length; i++) {
-			if (map[i] > value || (!isGreater && map[i] == value)) {
+			if (map[i] > value || (!isGreater && map[i] === value)) {
 				map[i] += update;
 			}
 		}
