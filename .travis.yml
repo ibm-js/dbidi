@@ -1,7 +1,7 @@
 env:
   global:
-    - secure: "FZs4G8KCBzSFkLbX8+Q/kY991lZMIownBGDa3NIK5AmfuO8HBnlJUzLcQcwyuMhaY1+LGxtxpQXOg8EGZHr7QDqLcOKUAE3rHxFPMnfD8bvGKTEu+/MQlZp5A8LlQTOCkCfrZjiPx41sEjdx1ZYHuyTdth0tS+R6X/45Azk7g9I="
-    - secure: "UVUPC+hTPWfUl3cleK3BR2AF+dDT/oFHcW9UYP1i01VINHG017DIEwz9PXqeDDnL1/4ZbxERIUtvFzWnmAty5W9JvOL73mdUml8nOWEPTsa31FHFqCjKc1DihYbBJyCTGy+BP6tZ0hCjHZxIk4SIp4YD7idYbSBsH/KXzDf5BLY="
+    - secure: "DN8GfMTxlio2A/pl0xI3gu8dl0O5f7NVALiaQCFmdwaid7M5kmwjBKL3dfz6csx8n2m0KezhTDUgHPpb8C0HxlSJxiJ3eRhpNPEhDL7IktHlRT22eJ7UNZ6MLI/6SNa/gXy/aGcTWwSspj5EjllO5nOvZPQAGbWhpCBXcU88ZOo="
+    - secure: "EII8uCmf+zLWpCcP+4W6BEZV7TOvccmtsj4trSbv2bYDbhdYVEHzC1xSrjCCIKrvjpcYRbws7UKDKYCLzGqq0XoUx3AeglgFqhXoOAbjHDFCM0cbQqGJ5BcFP3YIqkxsigq2okYWmmDLS5QZoNAhMLZKlUwPB7O6dM51NzivC7o="
 language: node_js
 node_js: "0.10"
 install:
