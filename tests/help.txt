@@ -1,0 +1,54 @@
+<CONFIG> Here should be placed Object, which may have the following properties:
+    "handler":       Module, which performs formatting. If not defined, dbidi/stt/common is used.
+    "points":        Defines delimiters - characters or substrings, which determine the structure.
+                     Value may be written as string or array.
+                     Examples:
+                         "points": "./;"
+                         "points": [".","/",";","/*","*/"]
+    "dir":           Main base direction of the structure. Can be one of "ltr", "rtl" and "auto".
+    "subDir":        Defines direction of subsegments.
+    "bounds":        Defines the boundaries of text segment, within which the search of delimiters will be done.
+                     Boundaries are considered as kind of delimiters.
+                     Value should be written as array of objects.
+                     {bounds[n]}        Object may have the following properties:
+                     "start":           Substring, by which text segment is started. 
+                     "startAfter":      Substring used as delimiter for the start of the segment.
+                                        If defined, property "start" is ignored.
+                                        If both "start" and "startAfter" undefined, segment starts 
+                                        from the beginning of the whole text.
+                     "startPos":        Position, from which text segments is started.
+                                        If defined, properties "start" and "startAfter" are ignored.
+                     "end":             Substring, by which text segment is ended.
+                     "endBefore":       Substring used as delimiter for the end of the segment.
+                                        If defined, property "end" is ignored.
+                                        If both "end" and "endBefore" are undefined, segments ends 
+                                        in the end of the whole text.
+                     "length":          The length of the segment. If defined, properties "end" and 
+                                        "endBefore" are ignored.
+                     "loops":           If set to "false", suitable segment is searched only once.
+                                        If "startPos" is defined, "loops" is set to "false".
+                                        In opposite case by default it is set to "true".
+                     "subDir":          Direction of subsegments, found in the segment in accordance with "bounds".
+                                        Can be one of "ltr", "rtl" and "auto".
+                     Examples:
+                         "bounds": [{"start": "/*", "end": "*/"}]
+                         "bounds": [{"startPos": "10", "length": "5"}, {"start": "//"}]
+    "subs":          Defines segment of the text by its content.
+                     Value should be written as object.
+                     {subs}             Object may have the following properties:
+                     "content":         Content of the segment.
+                     "continued":       If "true", successive segments with the same "content" are concatenated.
+                     "loops":           If "false", segment with given content is searched only once.
+                     "subDir":          Direction of the segment.
+    "cases":         Defines special handling for some parts of the text.
+                     Value should be written as array of objects.
+                     {cases[n]}         Object may have the following properties:
+                     "handler":         Module, which performs formatting. If not defined, dbidi/stt/common is used.
+                     "args":            Object, which may have all of above-mentioned properties.
+					
+    Note the sequence of calls:
+        1) Handle bounds
+        2) Handle segments with given content
+        3) Handle cases
+        4) Handle points
+</CONFIG>
