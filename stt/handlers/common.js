@@ -5,7 +5,7 @@ define(["./tools"], function (tools) {
 			var cases = [];
 			if (Array.isArray(args.cases)) {
 				cases = args.cases;
-			} 
+			}
 			var points = [];
 			if (typeof(args.points) !== "undefined") {
 				if (Array.isArray(args.points)) {

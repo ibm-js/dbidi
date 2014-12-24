@@ -10,9 +10,9 @@ define([
 	"./stt/url",
 	"./stt/word",
 	"./stt/xpath"
-	], function (breadcrumb, comma, custom, email, filepath, formula, sql, underscore, url, word, xpath) {
+], function (breadcrumb, comma, custom, email, filepath, formula, sql, underscore, url, word, xpath) {
 
-	function getHandler (type) { //jshint maxcomplexity: 15
+	function getHandler(type) { //jshint maxcomplexity: 15
 		switch (type) {
 		case "breadcrumb" :
 			return breadcrumb;
@@ -28,7 +28,7 @@ define([
 			return sql;
 		case "underscore" :
 			return underscore;
-		case "url" : 
+		case "url" :
 			return url;
 		case "word" :
 			return word;

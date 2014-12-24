@@ -9,7 +9,7 @@ define(["./internal/stext"], function (stext) {
 					dir: "ltr",
 					points: ":?#/@.[]="
 				},
-				!!isHtml, locale);		
+				!!isHtml, locale);
 		}
 	};
 });

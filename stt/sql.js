@@ -8,50 +8,47 @@ define(["./internal/stext", "./handlers/common"], function (stext, handler) {
 					guiDir: isRtl ? "rtl" : "ltr",
 					dir: "ltr",
 					points: "\t!#%&()*+,-./:;<=>?|[]{}",
-					cases: [
-					        	{
-					        		handler: handler,
-					        		args: {
-					        			bounds: [
-					        			         	{
-					        			         		start: "/*",
-					        			         		end: "*/"
-					        			         	},
-					        			         	{
-					        			         		start: "--",
-					        			         		end: "\n"
-					        			         	},
-					        			         	{
-					        			         		start: "--"
-					        			         	}
-					        			]
-					        		}
-					        	},
-					        	{
-					        		handler: handler,
-					        		args: {
-					        				subs: {
-					        						content: " ",
-					        						continued: true
-					        				}
-					        		}
-					        	},
-					        	{
-					        		handler: handler,
-					        		args: {
-					        			bounds: [
-					        			         {
-					        			        	 start: "'",
-					        			        	 end: "'"
-					        			         },
-					        			         {
-					        			        	 start: "\"",
-					        			        	 end: "\""
-					        			         }
-					        			]
-					        		}
-					        	}
-					        ]
+					cases: [{
+								handler: handler,
+								args: {
+										bounds: [{
+													start: "/*",
+													end: "*/"
+												},
+												{
+													start: "--",
+													end: "\n"
+												},
+												{
+													start: "--"
+												}
+												]
+								}
+							},
+							{
+								handler: handler,
+								args: {
+										subs: {
+												content: " ",
+												continued: true
+											}
+								}
+							},
+							{
+								handler: handler,
+								args: {
+										bounds: [{
+													start: "'",
+													end: "'"
+												},
+												{
+													start: "\"",
+													end: "\""
+												}
+												]
+									}
+							}
+							]
 				},
 				!!isHtml, locale);
 		}

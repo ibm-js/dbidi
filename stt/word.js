@@ -6,7 +6,7 @@ define(["./internal/stext"], function (stext) {
 			return stext.displayStructure(text,
 				{
 					guiDir: isRtl ? "rtl" : "ltr",
-					dir: args.dir ? args.dir : isRtl? "rtl" : "ltr",
+					dir: args.dir ? args.dir : isRtl ? "rtl" : "ltr",
 					points: " ,.!?;:",
 				},
 				!!isHtml, locale);

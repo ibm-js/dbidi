@@ -1,5 +1,5 @@
 define(["./internal/stext", "./handlers/common", "../misc"], function (stext, handler, misc) {
-	function getDir (text, locale) {
+	function getDir(text, locale) {
 		if (misc.getLocaleDetails(locale).lang !== "ar") {
 			return "ltr";
 		}
@@ -17,24 +17,22 @@ define(["./internal/stext", "./handlers/common", "../misc"], function (stext, ha
 					guiDir: isRtl ? "rtl" : "ltr",
 					dir: getDir(text, locale),
 					points: "<>.:,;@",
-					cases: [
-					        	{
-					        		handler: handler,
-					        		args: {
-					        			bounds: [
-					        			         	{
-					        			         		start: "\"",
-					        			         		end: "\""
-					        			         	},
-					        			         	{
-					        			         		start: "(",
-					        			         		end: ")"
-					        			         	}
-					        			],
-					        			points: ""
-					        		}
-					        	}
-					        ]
+					cases: [{
+								handler: handler,
+								args: {
+									bounds: [{
+												start: "\"",
+												end: "\""
+											},
+											{
+												start: "(",
+												end: ")"
+											}
+											],
+									points: ""
+								}
+							}
+							]
 				},
 				!!isHtml, locale);
 		}

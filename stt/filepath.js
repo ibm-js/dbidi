@@ -11,7 +11,7 @@ define(["./internal/stext", "../misc"], function (stext, misc) {
 					dir: "ltr",
 					points: "/\\:."
 				},
-				!!isHtml, locale);		
+				!!isHtml, locale);
 		}
 	};
 });

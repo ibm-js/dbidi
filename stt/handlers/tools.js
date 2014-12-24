@@ -1,10 +1,10 @@
 define(["../internal/TextSegment"], function (TextSegment) {
-	function initBounds (bounds) {
+	function initBounds(bounds) {
 		if (!bounds) {
 			return false;
 		}
 		if (typeof(bounds.start) === "undefined") {
-				bounds.start = "";
+			bounds.start = "";
 		}
 		if (typeof(bounds.end) === "undefined") {
 			bounds.end = "";
@@ -21,13 +21,13 @@ define(["../internal/TextSegment"], function (TextSegment) {
 		} else {
 			bounds.before = false;
 		}
-		var startPos = parseInt(bounds.startPos);
+		var startPos = parseInt(bounds.startPos, 10);
 		if (!isNaN(startPos)) {
 			bounds.usePos = true;
 		} else {
 			bounds.usePos = false;
 		}
-		var bLength = parseInt(bounds.length);
+		var bLength = parseInt(bounds.length, 10);
 		if (!isNaN(bLength)) {
 			bounds.useLength = true;
 		} else {
@@ -37,7 +37,7 @@ define(["../internal/TextSegment"], function (TextSegment) {
 		return true;
 	}
 	
-	function getBounds (segment, src) {
+	function getBounds(segment, src) {
 		var bounds = {};
 		for (var prop in src) {
 			bounds[prop] = src[prop];
@@ -53,7 +53,7 @@ define(["../internal/TextSegment"], function (TextSegment) {
 		if (useLength) {
 			bounds.end = "";
 		}
-		bounds.bEnd = useLength ? bounds.bStart + bounds.length : bounds.end.length > 0 ? 
+		bounds.bEnd = useLength ? bounds.bStart + bounds.length : bounds.end.length > 0 ?
 				content.indexOf(bounds.end, bounds.bStart + bounds.start.length) + 1 : content.length;
 		if (!bounds.after) {
 			bounds.start = "";
@@ -225,7 +225,7 @@ define(["../internal/TextSegment"], function (TextSegment) {
 						continue;
 					}
 					var content = segments[j].content;
-					var pos = content.indexOf(points[i]); 
+					var pos = content.indexOf(points[i]);
 					if (pos >= 0) {
 						segments.splice(j, 1);
 						if (pos > 0) {
@@ -243,7 +243,7 @@ define(["../internal/TextSegment"], function (TextSegment) {
 							segments.splice(j + 1, 0, new TextSegment({
 								content: content.substring(pos + points[i].length),
 								textDirection: args.subDir
-							}));							
+							}));
 						}
 					}
 				}

@@ -36,7 +36,7 @@ define([], function () {
 			locale = locale.toLowerCase();
 			if (isBidiLocale(locale)) {
 				var full = locale.split("-");
-				return {lang: full[0], country: full[1]? full[1] : ""};
+				return {lang: full[0], country: full[1] ? full[1] : ""};
 			}
 			return {lang: "not-bidi"};
 		},
@@ -53,7 +53,7 @@ define([], function () {
 				return dir;
 			}
 			guiDir = (/^(rtl|ltr)$/i).test(guiDir) ? guiDir : "ltr";
-			var txt = !checkEnd? text : text.split("").reverse().join("");
+			var txt = !checkEnd ? text : text.split("").reverse().join("");
 			var fdc = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(txt);
 			return fdc ? (fdc[0] <= "z" ? "ltr" : "rtl") : guiDir;
 		},
@@ -68,7 +68,7 @@ define([], function () {
 			for (var i = 0; i < text.length; i++) {
 				var c = "" + text.charAt(i);
 				switch (c) {
-				case LRM: 
+				case LRM:
 					result += "<LRM>";
 					break;
 				case RLM:
@@ -76,16 +76,16 @@ define([], function () {
 					break;
 				case LRE:
 					result += "<LRE>";
-					break;					
+					break;
 				case RLE:
 					result += "<RLE>";
-					break;					
+					break;
 				case LRO:
 					result += "<LRO>";
-					break;					
+					break;
 				case RLO:
 					result += "<RLO>";
-					break;					
+					break;
 				case PDF:
 					result += "<PDF>";
 					break;
@@ -99,8 +99,8 @@ define([], function () {
 		},
 
 		hideMarks: function (text) {
-			return text.replace(/<LRM>/g, LRM).replace(/<RLM>/g, RLM).replace(/<LRE>/g, LRE).
-				replace(/<RLE>/g, RLE).replace(/<LRO>/g, LRO).replace(/<RLO>/g, RLO).replace(/<PDF>/g, PDF);
+			var txt = text.replace(/<LRM>/g, LRM).replace(/<RLM>/g, RLM).replace(/<LRE>/g, LRE);
+			return txt.replace(/<RLE>/g, RLE).replace(/<LRO>/g, LRO).replace(/<RLO>/g, RLO).replace(/<PDF>/g, PDF);
 		}
 	};
 });

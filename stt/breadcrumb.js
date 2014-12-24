@@ -6,21 +6,21 @@ define(["./internal/stext"], function (stext) {
 			return stext.displayStructure(text,
 				{
 					guiDir: isRtl ? "rtl" : "ltr",
-					dir: args.dir ? args.dir : isRtl? "rtl" : "ltr",
+					dir: args.dir ? args.dir : isRtl ? "rtl" : "ltr",
 					subs: {
 						content: ">",
 						continued: true,
 						subDir: isRtl ? "rtl" : "ltr"
 					},
 					cases: [{
-					        	args: {
-					        			subs: {
-					        				content: "<",
-					        				continued: true,
-					        				subDir: isRtl ? "ltr" : "rtl"
-					        			}
-					        	}
-							}
+								args: {
+											subs: {
+														content: "<",
+														continued: true,
+														subDir: isRtl ? "ltr" : "rtl"
+											}
+								}
+					}
 					]
 				},
 				!!isHtml, locale);

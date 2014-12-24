@@ -14,5 +14,5 @@ define([
 			newlyCreated: false
 		}
 	);
-    return TextSegment;	
+    return TextSegment;
 });

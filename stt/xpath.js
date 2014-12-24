@@ -8,24 +8,22 @@ define(["./internal/stext", "./handlers/common"], function (stext, handler) {
 					guiDir: isRtl ? "rtl" : "ltr",
 					dir: "ltr",
 					points: " /[]<>=!:@.|()+-*",
-					cases: [
-					        	{
-					        		handler: handler,
-					        		args: {
-					        			bounds: [
-					        			         	{
-					        			         		start: "\"",
-					        			         		end: "\""
-					        			         	},
-					        			         	{
-					        			         		start: "'",
-					        			         		end: "'"
-					        			         	}
-					        			],
-					        			points: ""
-					        		}
-					        	}
-					        ]
+					cases: [{
+								handler: handler,
+								args: {
+										bounds: [{
+													start: "\"",
+													end: "\""
+												},
+												{
+													start: "'",
+													end: "'"
+												}
+												],
+										points: ""
+									}
+							}
+							]
 				},
 				!!isHtml, locale);
 		}
