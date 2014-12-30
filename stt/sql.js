@@ -9,46 +9,46 @@ define(["./internal/stext", "./handlers/common"], function (stext, handler) {
 					dir: "ltr",
 					points: "\t!#%&()*+,-./:;<=>?|[]{}",
 					cases: [{
-								handler: handler,
-								args: {
-										bounds: [{
-													start: "/*",
-													end: "*/"
-												},
-												{
-													start: "--",
-													end: "\n"
-												},
-												{
-													start: "--"
-												}
-												]
-								}
+						handler: handler,
+						args: {
+							bounds: [{
+								startAfter: "/*",
+								endBefore: "*/"
 							},
 							{
-								handler: handler,
-								args: {
-										subs: {
-												content: " ",
-												continued: true
-											}
-								}
+								startAfter: "--",
+								end: "\n"
 							},
 							{
-								handler: handler,
-								args: {
-										bounds: [{
-													start: "'",
-													end: "'"
-												},
-												{
-													start: "\"",
-													end: "\""
-												}
-												]
-									}
+								startAfter: "--"
 							}
 							]
+						}
+					},
+					{
+						handler: handler,
+						args: {
+							subs: {
+								content: " ",
+								continued: true
+							}
+						}
+					},
+					{
+						handler: handler,
+						args: {
+							bounds: [{
+								startAfter: "'",
+								endBefore: "'"
+							},
+							{
+								startAfter: "\"",
+								endBefore: "\""
+							}
+							]
+						}
+					}
+					]
 				},
 				!!isHtml, locale);
 		}

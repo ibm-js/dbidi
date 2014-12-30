@@ -9,21 +9,21 @@ define(["./internal/stext", "./handlers/common"], function (stext, handler) {
 					dir: "ltr",
 					points: " /[]<>=!:@.|()+-*",
 					cases: [{
-								handler: handler,
-								args: {
-										bounds: [{
-													start: "\"",
-													end: "\""
-												},
-												{
-													start: "'",
-													end: "'"
-												}
-												],
-										points: ""
-									}
+						handler: handler,
+						args: {
+							bounds: [{
+								startAfter: "\"",
+								endBefore: "\""
+							},
+							{
+								startAfter: "'",
+								endBefore: "'"
 							}
-							]
+							],
+							points: ""
+						}
+					}
+					]
 				},
 				!!isHtml, locale);
 		}

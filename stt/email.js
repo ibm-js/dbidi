@@ -18,21 +18,21 @@ define(["./internal/stext", "./handlers/common", "../misc"], function (stext, ha
 					dir: getDir(text, locale),
 					points: "<>.:,;@",
 					cases: [{
-								handler: handler,
-								args: {
-									bounds: [{
-												start: "\"",
-												end: "\""
-											},
-											{
-												start: "(",
-												end: ")"
-											}
-											],
-									points: ""
-								}
+						handler: handler,
+						args: {
+							bounds: [{
+								startAfter: "\"",
+								endBefore: "\""
+							},
+							{
+								startAfter: "(",
+								endBefore: ")"
 							}
-							]
+							],
+							points: ""
+						}
+					}
+					]
 				},
 				!!isHtml, locale);
 		}

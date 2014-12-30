@@ -13,13 +13,13 @@ define(["./internal/stext"], function (stext) {
 						subDir: isRtl ? "rtl" : "ltr"
 					},
 					cases: [{
-								args: {
-											subs: {
-														content: "<",
-														continued: true,
-														subDir: isRtl ? "ltr" : "rtl"
-											}
-								}
+						args: {
+							subs: {
+								content: "<",
+								continued: true,
+								subDir: isRtl ? "ltr" : "rtl"
+							}
+						}
 					}
 					]
 				},
