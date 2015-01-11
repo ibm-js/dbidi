@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Test bidi formatting</title>
+
+<script type="text/javascript" src="../../requirejs/require.js"></script>
+	<script type="text/javascript">
+		require.config({
+			baseUrl: "../../",
+			//config: {
+				"requirejs-dplugins/has": {
+					"bidi": true
+				}
+			//}
+		});		
+		require([
+			"dbidi/format",
+			"dbidi/misc",
+			"delite/register",
+			"requirejs-text/text!dbidi/tests/help.txt",
+			"deliteful/Button",
+			"requirejs-domready/domReady!"
+		], function (format, misc, register, helptxt) {
+			register.parse();
+			guiDir = "ltr";
+			mMisc = misc;
+			fFormat = format;
+			local = document.documentElement.lang? document.documentElement.lang : "en";
+			predef = "CUSTOM";
+			errMsg = "Synax Error!!!   Syntax Error!!!";
+			htxt = helptxt.replace(/<.*>/g,"");
+			inpb = document.getElementById("inpb");
+			outb = document.getElementById("outb");
+			inArea = document.getElementById("inp");
+			outArea = document.getElementById("out");
+			confArea = document.getElementById("config");
+			b1 = document.getElementById('b1');
+			b2 = document.getElementById('b2');
+			b3 = document.getElementById('b3');
+			b4 = document.getElementById('b4');
+			s1 = document.getElementById('s1');
+			s2 = document.getElementById('s2');
+			s3 = document.getElementById('s3');
+			bHelp = document.getElementById('help');
+
+			inpb.onclick = function () {
+				if (inpb.innerHTML === "To Logical") {
+					inArea.value = (guiDir === "ltr"? misc.LRO : misc.RLO) + inArea.value + misc.PDF;
+					inpb.innerHTML = "To Visual";
+				} else {
+					inArea.value = misc.removeUcc(inArea.value);
+					inpb.innerHTML = "To Logical";
+				}
+			};
+			outb.onclick = function () {
+				if (outb.innerHTML === "Show UCC") {
+					outArea.value = misc.showMarks(outArea.value);
+					outb.innerHTML = "Hide UCC";
+				} else {
+					outArea.value = misc.hideMarks(outArea.value);
+					outb.innerHTML = "Show UCC";
+				}
+			};
+			b4.onclick = function () {
+				var args = {};
+				if (confArea.value !== "") {
+					try {
+						args = JSON.parse(confArea.value);						
+					} catch (e) {
+						outArea.value = errMsg;
+						return;
+					}
+				}
+				if (outb.innerHTML === 'Show UCC') {
+					outArea.value = format.getString(mMisc.removeUcc(inArea.value), predef, args, guiDir === "rtl", local);
+				} else {
+					outArea.value = misc.showMarks(format.getString(mMisc.removeUcc(inArea.value), predef, args, guiDir === "rtl", local));
+				}
+			};
+			bHelp.onclick = function () {
+				if (this.innerHTML === 'Help') {
+					confArea.origContent = confArea.value; 
+					confArea.value = htxt.replace('   ',' ');
+					[inArea, outArea, b1, b2, b3, b4, s1, s2, s3, inpb, outb].forEach(function (element) {
+						element.disabled = true;
+					});
+					confArea.origDisabled = confArea.disabled;
+					confArea.disabled = false;
+					this.innerHTML = 'Return';
+				} else {
+					[inArea, outArea, b1, b2, b3, b4, s1, s2, s3, inpb, outb].forEach(function (element) {
+						element.disabled = false;
+					})
+					confArea.disabled = confArea.origDisabled;
+					this.innerHTML = 'Help';
+					confArea.value = confArea.origContent;
+					confArea.origContent = '';
+				}
+			};
+			s1.onchange = function () {
+				inArea.dir = this.value.toLowerCase();
+				outArea.dir = this.value.toLowerCase();
+				guiDir = this.value.toLowerCase();
+				var inpVal = misc.removeUcc(inArea.value);
+				var args = {};
+				if (confArea.value !== "") {
+					try {
+						args = JSON.parse(confArea.value);						
+					} catch (e) {
+						outArea.value = errMsg;
+						return;
+					}
+				}
+				if (outb.innerHTML !== 'Show UCC') {
+					outArea.value = misc.showMarks(format.getString(inpVal, predef, args, guiDir === 'rtl', local));
+				} else {
+					outArea.value = format.getString(inpVal, predef, args, guiDir === 'rtl', local);
+				}
+			};
+			s2.onchange = function () {
+				local = this.value.toLowerCase();
+				document.documentElement.lang = local; 
+				var inpVal = misc.removeUcc(inArea.value);
+				var args = {};
+				if (confArea.value !== "") {
+					try {
+						args = JSON.parse(confArea.value);						
+					} catch (e) {
+						outArea.value = errMsg;
+						return;
+					}
+				}				
+				if (outb.innerHTML !== 'Show UCC') {
+					outArea.value = misc.showMarks(format.getString(inpVal, predef, args, guiDir === 'rtl', local));
+				} else {
+					outArea.value = format.getString(inpVal, predef, args, guiDir === 'rtl', local);
+				}
+			};
+			s3.onchange = function () {
+				var inpVal = misc.removeUcc(inArea.value);
+				predef = this.value.toLowerCase();
+				if (predef !== 'custom') {
+					confArea.disabled = true;
+				} else {
+					confArea.disabled = false;
+				}
+				var args = {};
+				if (confArea.value !== "") {
+					try {
+						args = JSON.parse(confArea.value);						
+					} catch (e) {
+						outArea.value = errMsg;
+						return;
+					}
+				}				
+				if (outb.innerHTML !== 'Show UCC') {
+					outArea.value = misc.showMarks(format.getString(inpVal, predef, args, guiDir === 'rtl', local));
+				} else {
+					outArea.value = format.getString(inpVal, predef, args, guiDir === 'rtl', local);
+				}
+			};
+		});
+	</script>
+</head>
+<body>
+<table style="width: 100%; border-collapse: separate; border-spacing: 10px;">
+<tr>
+
+<td style="width: 80%">
+<textarea id="inp" rows=2 style="width: 100%;" spellcheck="false"></textarea>
+<br>
+<textarea id="out" rows=2 style="width: 100%;" spellcheck="false"></textarea>
+<br>
+<textarea id="config" rows="20" style="width: 100%;" spellcheck="false" wrap="off"></textarea>
+<br>
+<button id="b1" onclick="config.value = ''">Clear config</button>
+<button id="b2" onclick="inp.value = ''">Clear input</button>
+<button id="b3" onclick="out.value = ''">Clear output</button>
+<button id="help">Help</button>
+</td>
+
+<td>
+<button id="inpb" style="position: relative; top: -115px;">To Logical</button>
+<br>
+<button id="outb" style="position: relative; top: -80px;">Show UCC</button>
+<br>
+<div style="position: relative; top: -50px;">
+GUI direction:
+<br>
+<select style="width: 100px;" id="s1">
+   <option> LTR </option>
+   <option> RTL </option>
+</select>
+</div>
+<div style="position: relative; top: -10px;">
+Locale:
+<br>
+<select style="width: 100px;" id="s2">
+   <option> EN </option>
+   <option> HE </option>
+   <option> AR </option>
+</select>
+</div>
+<div style="position: relative; top: 30px;">
+Handler:
+<br>
+<select style="width: 100px;" id="s3">
+   <option> CUSTOM </option>
+   <option> BREADCRUMB </option>
+   <option> COMMA </option>
+   <option> EMAIL </option>
+   <option> FILEPATH </option>
+   <option> FORMULA </option>
+   <option> SQL </option>
+   <option> UNDERSCORE </option>
+   <option> URL </option>
+   <option> WORD </option>
+   <option> XPATH </option>
+</select>
+</div>
+<div>
+<button id="b4" style="position: relative; top: 90px; height: 50px;">Format</button>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>
