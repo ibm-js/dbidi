@@ -9,8 +9,10 @@ The `dbidi/TextLayoutEngine` module provides a bidi transformation engine used f
 Engine implements Unicode Bidi Algorithm as specified at [Unicode Standard Annex #9](http://www.unicode.org/reports/tr9/).
 Type of the transformation is controlled by parameters, which describe actual format of input and required format of output.
 Object holds these parameters as a properties, which allow to reuse them in multiply calls of engine.
-Additionally object holds info about relative positions of each character in the source and resulting strings.
-This info is placed into sourceToTarget and targetToSource attributes. 
+Additionally object holds 
+* info about relative positions of each character in the source and resulting strings;
+* info about bidi levels of each character in the source string.
+This info is placed into `sourceToTarget`, `targetToSource` and `levels` attributes. 
 
 ##### Table of Contents
 [Instantiation](#instantiation)  
