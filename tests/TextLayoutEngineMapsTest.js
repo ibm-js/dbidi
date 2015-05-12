@@ -51,13 +51,13 @@ define([
 			});
 		},
 		"(5) Levels: ltr" : function () {
-			var result = engine.bidiTransform(txt1, "ILYNN", "VRNNN");
+			engine.bidiTransform(txt1, "ILYNN", "VRNNN");
 			assert.equal(engine.levels.join(""), "1111222000000000", contErr);
 		},
 		"(6) Levels: rtl" : function () {
-			var result = engine.bidiTransform(txt1, "IRYNN", "VLNNN");
+			engine.bidiTransform(txt1, "IRYNN", "VLNNN");
 			assert.equal(engine.levels.join(""), "1111222122222221", contErr);
-		}				
+		}
 	});
 
 	var txt1 = "\u05d0\u05d1\u05d2 123 ABC 456.";

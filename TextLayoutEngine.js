@@ -353,7 +353,7 @@ define([
 		if ((inOrdering === "V") && (outOrdering === "V")) {
 			//inOrientation != outOrientation
 			//cases: VRTL->VLTR, VLTR->VRTL
-			bdx.dir = inOrientation === "RTL"? RTL : LTR;
+			bdx.dir = inOrientation === "RTL" ? RTL : LTR;
 			return invertStr(text, bdx);
 		}
 		if ((inOrdering === "L") && (outFormat === "VRTL")) {
