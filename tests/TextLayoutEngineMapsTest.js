@@ -5,7 +5,7 @@ define([
 ], function (registerSuite, assert, TextLayoutEngine) {
 	var engine = new TextLayoutEngine();
 	registerSuite({
-		name: "Test Text Layout Engine source-to-target and target-to-source maps",
+		name: "Test Text Layout Engine source-to-target, target-to-source and level maps",
 		"(1) implicit ltr -> visual ltr" : function () {
 				var result = engine.bidiTransform(txt1, "ILYNN", "VLNNN");
 				assert.equal(engine.sourceToTarget.length, result.length, lengthErr);
@@ -50,6 +50,14 @@ define([
 				assert.equal(txt1.charAt(ind), result.charAt(val), contErr);
 			});
 		},
+		"(5) Levels: ltr" : function () {
+			engine.bidiTransform(txt1, "ILYNN", "VRNNN");
+			assert.equal(engine.levels.join(""), "1111222000000000", contErr);
+		},
+		"(6) Levels: rtl" : function () {
+			engine.bidiTransform(txt1, "IRYNN", "VLNNN");
+			assert.equal(engine.levels.join(""), "1111222122222221", contErr);
+		}
 	});
 
 	var txt1 = "\u05d0\u05d1\u05d2 123 ABC 456.";

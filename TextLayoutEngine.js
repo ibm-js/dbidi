@@ -51,6 +51,9 @@ define([
 		
 		// Array, containing positions of each character from the resulting text in the source text. 
 		targetToSource: [],
+		
+		// Array, containing bidi level of each character from the source text
+		levels: [],
 
 		bidiTransform: function (/*String*/text, /*String*/formatIn, /*String*/formatOut) {
 			// summary:
@@ -152,7 +155,10 @@ define([
 			if (!this.checkParameters(formatIn, formatOut)) {
 				return text;
 			}
-	
+			
+			formatIn = this.inputFormat;
+			formatOut = this.outputFormat;
+			var result = text;
 			var bdx = BDX;
 			var orientIn = getOrientation(formatIn.charAt(1)),
 				orientOut = getOrientation(formatOut.charAt(1)),
@@ -180,14 +186,16 @@ define([
 			tsMap = this.targetToSource;
 			
 			if (formatIn.charAt(3) === formatOut.charAt(3)) {
-				return stage1Text;
+				result = stage1Text;
 			} else if (formatOut.charAt(3) === "S") {
-				return shape(isRtl, stage1Text, true);
+				result = shape(isRtl, stage1Text, true);
 			} else {  //formatOut.charAt(3) === "N"
-				return deshape(stage1Text, isRtl, true);
+				result = deshape(stage1Text, isRtl, true);
 			}
 			this.sourceToTarget = stMap;
 			this.targetToSource = tsMap;
+			this.levels = lvMap;
+			return result;
 		},
 
 		_setInputFormatAttr: function (format) {
@@ -272,30 +280,16 @@ define([
 			// text:
 			//		The source string.
 			// description:
-			//		Iterates over the text string, letter by letter starting from its beginning,
-			//		searching for RTL directed character. 
-			//		Return true if found else false. Needed for vml transformation.
+			//		Searches for RTL directed character. 
+			//		Returns true if found, else returns false.
 			// returns: /*Boolean*/
 			//		true - if text has a RTL directed character.
 			//		false - otherwise. 
 			// tags:
 			//		public
 	
-			var type = null, uc = null,	hi = null;
-			for (var i = 0; i < text.length; i++) {
-				uc = text.charAt(i).charCodeAt(0);
-				hi = MasterTable[uc >> 8];
-				type = hi < TBBASE ? hi : UnicodeTable[hi - TBBASE][uc & 0xFF];
-				if (type === UBAT_R || type === UBAT_AL) {
-					return true;
-				}
-				if (type === UBAT_B) {
-					break;
-				}
-			}
-			return false;
+		    return bidiChars.test(text);
 		}
-		
 	});
 
 	function doBidiReorder(/*String*/text, /*String*/inFormat,
@@ -359,7 +353,8 @@ define([
 		if ((inOrdering === "V") && (outOrdering === "V")) {
 			//inOrientation != outOrientation
 			//cases: VRTL->VLTR, VLTR->VRTL
-			return invertStr(text);
+			bdx.dir = inOrientation === "RTL" ? RTL : LTR;
+			return invertStr(text, bdx);
 		}
 		if ((inOrdering === "L") && (outFormat === "VRTL")) {
 			//cases: LLTR->VRTL, LRTL->VRTL
@@ -590,8 +585,7 @@ define([
 		// text:
 		//		The source string.
 		// description:
-		//		Iterates over the text string, letter by letter starting from its beginning,
-		//		searching for first "strong" character. 
+		//		Searches for first "strong" character. 
 		//		Returns if strong character was found with the direction defined by this 
 		//		character, if no strong character was found returns an empty string.
 		// returns: String
@@ -601,22 +595,9 @@ define([
 		// tags:
 		//		private
 	
-		var type = null, uc = null, hi = null;
-		for (var i = 0; i < text.length; i++) {
-			uc = text.charAt(i).charCodeAt(0);
-			hi = MasterTable[uc >> 8];
-			type = hi < TBBASE ? hi : UnicodeTable[hi - TBBASE][uc & 0xFF];
-			if (type === UBAT_R || type === UBAT_AL) {
-				return "rtl";
-			}
-			if (type === UBAT_L) {
-				return	"ltr";
-			}
-			if (type === UBAT_B) {
-				break;
-			}
-		}
-		return "";
+		var fdc = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(text);
+		// if found return the direction that defined by the character
+		return fdc ? (fdc[0] <= "z" ? "ltr" : "rtl") : "";
 	}
 	
 	function lastStrongDir(text) {
@@ -625,26 +606,14 @@ define([
 		// text:
 		//		The source string.
 		// description:
-		//		Iterates over the text string, letter by letter starting from its end,
-		//		searching for first (from the end) "strong" character. 
+		//		Searches for first (from the end) "strong" character. 
 		//		Returns if strong character was found with the direction defined by this 
 		//		character, if no strong character was found returns an empty string.
 		// tags:
 		//		private		
-		var type = null;
-		for (var i = text.length - 1; i >= 0; i--) {
-			type = getCharacterType(text.charAt(i));
-			if (type === UBAT_R || type === UBAT_AL) {
-				return "rtl";
-			}
-			if (type === UBAT_L) {
-				return	"ltr";
-			}
-			if (type === UBAT_B) {
-				break;
-			}
-		}
-		return "";
+		var chars = text.split("");
+		chars.reverse();
+		return firstStrongDir(chars.join(""));
 	}
 	
 	function deshape(/*String*/text, /*boolean*/rtl, /*boolean*/consumeNextSpace) {   //jshint maxcomplexity: 15
@@ -730,6 +699,7 @@ define([
 		swapChars(chars, levels, bdx);
 		invertLevel(2, chars, levels, bdx);
 		invertLevel(1, chars, levels, bdx);
+		lvMap = levels;
 		return chars.join("");
 	}
 
@@ -843,7 +813,7 @@ define([
 		return (hi < TBBASE) ? hi : UnicodeTable[hi - TBBASE][uc & 0xFF];
 	}
 	
-	function invertStr(str) {
+	function invertStr(str, bdx) {
 		// summary:
 		//		Return the reversed string.
 		// str:
@@ -853,6 +823,11 @@ define([
 		// tags:
 		//		private					
 		var chars = str.split("");
+		if (bdx) {
+			var levels = [];
+			computeLevels(chars, levels, bdx);
+			lvMap = levels;
+		}
 		chars.reverse();
 		stMap.reverse();
 		return chars.join("");
@@ -1117,6 +1092,7 @@ define([
 
 	function initMaps(map1, map2, length) {
 		stMap = [];
+		lvMap = [];
 		for (var i = 0; i < length; i++) {
 			map1[i] = i;
 			map2[i] = i;
@@ -1142,6 +1118,7 @@ define([
 
 	var stMap = [];
 	var tsMap = [];
+	var lvMap = [];
 		
 	var	BDX = {
 			dir: 0,
@@ -1167,6 +1144,8 @@ define([
 	var RTL = 1;
 
 	var validFormat = /^[(I|V)][(L|R|C|D)][(Y|N)][(S|N)][N]$/;
+
+	var bidiChars = /[\u0591-\u06ff\ufb1d-\ufefc]/;
 
 	/****************************************************************************/
 	/* Array in which directional characters are replaced by their symmetric.	*/
